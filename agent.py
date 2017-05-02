@@ -23,7 +23,7 @@ VULNERS_LINKS = {'pkgChecker':'/api/v3/agent/audit/',
 
 
 AGENT_TYPE = "vulners_agent"
-AGENT_VERSION = "0.2"
+AGENT_VERSION = "0.1"
 HTTP_PROXY = None
 API_HOST = None
 logfile = os.path.realpath(os.path.join(os.path.dirname(__file__),"logs/vulners.log"))
