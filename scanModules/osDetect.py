@@ -3,6 +3,8 @@ __author__ = 'videns'
 import subprocess
 import uuid
 import re
+import logging
+
 try:
     from subprocess import DEVNULL # py3k
 except ImportError:
@@ -20,15 +22,19 @@ class ScannerInterface(object):
             (self.osVersion, self.osFamily, self.osDetectionWeight) = osDetection
 
     def sshCommand(self, command):
+        logging.debug("Executing ssh command - '%s'" % command)
         if self.sshPrefix:
             command = "%s %s" % (self.sshPrefix, command)
         randPre = str(uuid.uuid4()).split('-')[0]
         randAfter = str(uuid.uuid4()).split('-')[0]
         randFail = str(uuid.uuid4()).split('-')[0]
         command = "echo %s; %s; echo %s || echo %s" % (randPre, command, randAfter, randFail)
+        logging.debug("Full ssh command - '%s'" % command)
         cmdResult = subprocess.Popen(command, stdout=subprocess.PIPE, stderr=DEVNULL, shell=True).communicate()[0]
+
         if isinstance(cmdResult, bytes):
             cmdResult = cmdResult.decode('utf8')
+        logging.debug("SSH Command result - '%s'" % cmdResult)
         if randFail in cmdResult:
             return None
         else:
@@ -36,7 +42,7 @@ class ScannerInterface(object):
             if resMatch:
                 return resMatch.group(1)
             else:
-                return None
+                return ""
 
     def osDetect(self):
         return None
