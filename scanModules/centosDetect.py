@@ -7,7 +7,8 @@ from scanModules.linuxDetect import linuxDetect
 
 class rpmBasedDetect(linuxDetect):
     def __init__(self,sshPrefix):
-        self.supportedFamilies = ('redhat', 'centos', 'oraclelinux', 'suse', 'fedora')
+        self.supportedFamilies = ('redhat', 'centos', 'oraclelinux',
+                                  'suse', 'fedora', 'ol', 'rhel')
         super(rpmBasedDetect, self).__init__(sshPrefix)
 
     def osDetect(self):
