@@ -23,12 +23,12 @@ VULNERS_LINKS = {'pkgChecker':'/api/v3/agent/audit/',
 
 
 AGENT_TYPE = "vulners_agent"
-AGENT_VERSION = "0.1"
+AGENT_VERSION = "0.2"
 HTTP_PROXY = None
 API_HOST = None
 logfile = os.path.realpath(os.path.join(os.path.dirname(__file__),"logs/vulners.log"))
 
-logging.basicConfig(level=logging.DEBUG,format="%(asctime)s %(levelname)s %(message)s",filename=logfile)
+logging.basicConfig(level=logging.DEBUG, format="%(asctime)s %(levelname)s %(message)s", filename=logfile)
 
 def sendHttpRequest(url, payload):
     if HTTP_PROXY:
@@ -40,6 +40,7 @@ def sendHttpRequest(url, payload):
     req = urllib2.Request("https://%s%s" % (API_HOST, url))
     req.add_header('Content-Type', 'application/json')
     req.add_header('User-Agent', '%s-v%s' % (AGENT_TYPE, AGENT_VERSION))
+    logging.debug("Sending http request, url - %s, payload - %s", url, payload)
     response = urllib2.urlopen(req, json.dumps(payload).encode('utf-8'))
     logging.debug(json.dumps(payload).encode('utf-8'))
     responseData = response.read()
@@ -163,7 +164,7 @@ class agentEngine():
     def getIP(self):
         ipaddr = self.config.getItem("agent", "ipaddr")
         if not ipaddr:
-            hostname = self.host.getInstance().getIP()
+            ipaddr = self.host.getInstance().getIP()
             self.config.setItem("agent", "ipaddr", ipaddr)
         return ipaddr
 
